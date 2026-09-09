@@ -12,17 +12,19 @@
 <meta name="apple-mobile-web-app-title" content="Carnet café">
 <meta name="theme-color" content="#3C2414">
 <link rel="apple-touch-icon" href="icone.png">
+<link rel="icon" href="icone.png">
 <style>
   :root{
-    --espresso:#3C2414;
-    --mocha:#7A4A28;
-    --latte:#D3A66B;
-    --milk:#FFF6E9;
-    --cream-bg:#F6ECDA;
+    --espresso:#2B1710;
+    --mocha:#A8672E;
+    --latte:#DDAD6C;
+    --milk:#F4E4C6;
+    --cream-bg:#F8F0E1;
     --ink:#2A1B10;
-    --ink-soft:#5C4530;
-    --card:#FFFCF5;
-    --line:#E4D5B7;
+    --ink-soft:#6B4E30;
+    --card:#FFFCF6;
+    --line:#E9D7B4;
+    --danger:#8B3A2B;
     --font-display: Georgia, 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', serif;
     --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   }
@@ -63,8 +65,8 @@
     scrollbar-width:none;
     -ms-overflow-style:none;
     background:
-      radial-gradient(ellipse 500px 300px at 10% 0%, rgba(211,166,107,0.20), transparent 60%),
-      radial-gradient(ellipse 400px 300px at 95% 20%, rgba(122,74,40,0.12), transparent 55%),
+      radial-gradient(ellipse 500px 300px at 10% 0%, rgba(221,173,108,0.20), transparent 60%),
+      radial-gradient(ellipse 400px 300px at 95% 20%, rgba(168,103,46,0.12), transparent 55%),
       var(--cream-bg);
     position:relative;
   }
@@ -77,27 +79,28 @@
   @media (prefers-reduced-motion: reduce){
     *{ transition:none !important; animation:none !important; }
   }
+  svg{ pointer-events:none; }
 
-  /* ---- Hero ---- */
+  /* ---- Hero (Cafés tab) ---- */
   .hero{
     position:relative;
     height:calc(190px + env(safe-area-inset-top));
-    margin:0 0 34px;
+    margin:0 0 20px;
     border-radius:0 0 26px 26px;
-    overflow:visible;
-    background:
-      radial-gradient(ellipse 220px 160px at 85% 12%, var(--milk) 0%, transparent 65%),
-      radial-gradient(ellipse 240px 200px at 68% 62%, var(--latte) 0%, transparent 70%),
-      radial-gradient(ellipse 160px 140px at 96% 94%, var(--milk) 0%, transparent 60%),
-      linear-gradient(135deg, var(--espresso) 0%, var(--mocha) 58%, var(--latte) 100%);
-    box-shadow:0 8px 20px -10px rgba(60,36,20,0.45);
+    overflow:hidden;
+    background-color:var(--espresso);
+    background-image:
+      linear-gradient(135deg, rgba(28,15,8,0.62) 0%, rgba(28,15,8,0.22) 45%, rgba(28,15,8,0.05) 70%),
+      url('fond-cafe.jpg');
+    background-size:cover;
+    background-position:center;
+    box-shadow:0 8px 20px -10px rgba(43,23,16,0.5);
   }
-  .hero-swirl{ position:absolute; top:0; right:0; bottom:0; left:0; width:100%; height:100%; display:block; }
-  .hero-text{ position:relative; z-index:3; padding:calc(26px + env(safe-area-inset-top)) 22px 0; }
+  .hero-text{ position:relative; z-index:3; padding:calc(24px + env(safe-area-inset-top)) 22px 0; }
   .hero-text h1{
     font-family:var(--font-display);
     font-weight:400;
-    font-size:30px;
+    font-size:28px;
     margin:0 0 4px;
     color:var(--milk);
     text-shadow:0 1px 4px rgba(0,0,0,0.28);
@@ -108,152 +111,148 @@
     font-size:13px;
     color:rgba(255,246,233,0.82);
   }
-  .ice-cube{
-    position:absolute;
-    z-index:2;
-    border-radius:5px;
-    background:linear-gradient(135deg, rgba(255,255,255,0.92), rgba(255,255,255,0.32));
-    border:1px solid rgba(255,255,255,0.65);
-    box-shadow:0 3px 6px rgba(60,36,20,0.28);
-    overflow:hidden;
+  .list-header{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 20px 10px;
   }
-  .ice-cube::after{
-    content:'';
-    position:absolute;
-    top:14%; left:18%;
-    width:60%; height:14%;
-    background:rgba(255,255,255,0.85);
-    border-radius:2px;
-    transform:rotate(-28deg);
+  .list-header span{ font-size:12.5px; color:var(--ink-soft); }
+  .link-btn{
+    display:flex; align-items:center; gap:5px;
+    background:none; border:none;
+    color:var(--mocha); font-size:12.5px; font-weight:700;
+    padding:4px;
   }
-  .ice-1{ width:26px; height:26px; right:58px; bottom:-9px; transform:rotate(12deg); }
-  .ice-2{ width:20px; height:20px; right:32px; bottom:-15px; transform:rotate(-16deg); }
-  .ice-3{ width:23px; height:23px; right:12px; bottom:3px; transform:rotate(24deg); }
-  .drip{
-    position:absolute;
-    width:13px; height:13px;
-    border-radius:50% 50% 50% 0;
-    transform:rotate(-45deg);
-    background:linear-gradient(160deg, var(--latte), var(--mocha));
-    box-shadow:0 3px 5px rgba(60,36,20,0.25);
-    z-index:1;
-  }
-  .drip-1{ left:16%; bottom:-13px; width:10px; height:10px; }
-  .drip-2{ left:47%; bottom:-21px; }
-  .drip-3{ left:75%; bottom:-16px; width:11px; height:11px; }
+  .link-btn svg{ width:14px; height:14px; }
 
-  .progress-line{
-    padding:0 20px;
-    font-size:12.5px;
-    color:var(--ink-soft);
-  }
-
-  /* ---- List ---- */
-  .list{
-    padding:10px 20px calc(100px + env(safe-area-inset-bottom));
-  }
-  .row{
+  /* ---- Cards (used by both tabs) ---- */
+  .cafe-list{ padding:2px 20px calc(94px + env(safe-area-inset-bottom)); }
+  .ranking-list{ padding:0 20px calc(94px + env(safe-area-inset-bottom)); }
+  .cafe-card{
     width:100%;
+    display:flex; align-items:center; gap:12px;
+    background:var(--card);
+    border:none; border-radius:16px;
+    padding:11px 14px;
+    margin-bottom:9px;
     text-align:left;
-    background:none;
-    border:none;
-    border-bottom:1px solid var(--line);
-    padding:15px 2px;
-    display:flex;
-    align-items:center;
-    gap:10px;
+    box-shadow:0 2px 8px rgba(60,36,20,0.08), 0 1px 2px rgba(60,36,20,0.05);
     transition:transform 0.1s ease, opacity 0.1s ease;
   }
-  .row:active{ transform:scale(0.98); opacity:0.8; }
-  .row-main{ flex:1; min-width:0; }
-  .row-name{
-    font-size:15.5px;
-    font-weight:600;
-    color:var(--ink);
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
+  .cafe-card:active{ transform:scale(0.98); opacity:0.82; }
+  .cafe-info{ flex:1; min-width:0; }
+  .cafe-name{
+    font-size:15px; font-weight:600; color:var(--ink);
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   }
-  .row-addr{
-    font-size:12.5px;
-    color:var(--ink-soft);
-    margin-top:2px;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
+  .cafe-addr{
+    font-size:12px; color:var(--ink-soft); margin-top:1px;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   }
-  .row-score{
-    font-family:var(--font-display);
-    font-size:20px;
-    color:var(--mocha);
-    min-width:52px;
-    text-align:right;
+  .chev{ color:var(--line); flex-shrink:0; display:flex; }
+  .chev svg{ width:18px; height:18px; display:block; }
+
+  .ring-badge{ position:relative; width:46px; height:46px; flex-shrink:0; }
+  .ring-badge svg{ display:block; }
+  .ring-value{
+    position:absolute; top:0; right:0; bottom:0; left:0; display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-display); font-size:15px; color:var(--mocha);
   }
-  .row-score .max{
-    font-size:12px;
-    color:var(--ink-soft);
-    font-family:var(--font-body);
+  .ring-value.small{ font-size:13px; }
+  .avatar-badge{
+    width:46px; height:46px; border-radius:50%; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-display); font-size:17px; font-weight:600;
   }
-  .row-score.unrated{
-    font-family:var(--font-body);
-    font-size:12px;
-    color:var(--ink-soft);
-    font-style:italic;
+  .avatar-badge.small{ width:40px; height:40px; font-size:14px; }
+  .rank-chip{
+    width:24px; height:24px; border-radius:50%; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    font-size:11.5px; font-weight:700; color:var(--ink-soft); background:var(--line);
   }
-  .chevron{ color:var(--line); font-size:18px; }
+  .rank-chip.top{ background:var(--mocha); color:#fff; }
 
   .add-row{
     width:100%;
+    display:flex; align-items:center; justify-content:center; gap:8px;
     background:none;
-    border:none;
-    border-top:1px dashed var(--line);
-    margin-top:6px;
-    padding:16px 2px 8px;
-    text-align:left;
+    border:2px dashed var(--line); border-radius:16px;
+    padding:14px;
+    margin-top:2px;
     color:var(--mocha);
-    font-size:14.5px;
-    font-weight:600;
+    font-size:14px; font-weight:700;
     transition:transform 0.1s ease, opacity 0.1s ease;
   }
-  .add-row:active{ transform:scale(0.98); opacity:0.8; }
+  .add-row:active{ transform:scale(0.98); opacity:0.82; }
+  .add-row svg{ width:16px; height:16px; }
 
   .new-form{
-    padding:12px 2px 18px;
-    display:flex;
-    flex-direction:column;
-    gap:8px;
+    background:var(--card);
+    border-radius:16px;
+    padding:14px;
+    display:flex; flex-direction:column; gap:8px;
+    box-shadow:0 2px 8px rgba(60,36,20,0.08);
   }
   .new-form input{
-    font-family:inherit;
-    font-size:14.5px;
+    font-family:inherit; font-size:14.5px;
     padding:10px 12px;
-    border:1px solid var(--line);
-    border-radius:6px;
-    background:var(--card);
-    color:var(--ink);
+    border:1px solid var(--line); border-radius:8px;
+    background:var(--cream-bg); color:var(--ink);
   }
-  .new-form-actions{
-    display:flex;
-    gap:10px;
-    margin-top:2px;
-  }
+  .new-form-actions{ display:flex; gap:10px; margin-top:2px; }
   .btn{
-    padding:9px 16px;
-    border-radius:6px;
-    font-size:14px;
-    font-weight:600;
+    padding:9px 16px; border-radius:8px;
+    font-size:14px; font-weight:700;
     border:1px solid var(--line);
-    background:var(--card);
-    color:var(--ink);
+    background:var(--card); color:var(--ink);
     transition:transform 0.1s ease, opacity 0.1s ease;
   }
   .btn:active{ transform:scale(0.97); opacity:0.85; }
-  .btn-primary{
-    background:var(--mocha);
-    border-color:var(--mocha);
-    color:#fff;
-    box-shadow:0 2px 6px rgba(60,36,20,0.25);
+  .btn-primary{ background:var(--mocha); border-color:var(--mocha); color:#fff; box-shadow:0 2px 6px rgba(60,36,20,0.25); }
+  .btn-danger{ background:var(--danger); border-color:var(--danger); color:#fff; }
+
+  /* ---- Ranking tab ---- */
+  .ranking-header{ padding:calc(26px + env(safe-area-inset-top)) 20px 2px; }
+  .ranking-header h1{
+    font-family:var(--font-display); font-weight:400; font-size:26px;
+    margin:0 0 4px; color:var(--ink);
   }
+  .ranking-header p{ margin:0 0 4px; font-size:13px; color:var(--ink-soft); }
+  .chips{
+    display:flex; gap:8px; overflow-x:auto;
+    padding:10px 20px 16px;
+    scrollbar-width:none; -ms-overflow-style:none;
+  }
+  .chips::-webkit-scrollbar{ display:none; }
+  .chip{
+    flex:0 0 auto;
+    padding:8px 14px; border-radius:16px;
+    border:1px solid var(--line); background:var(--card);
+    color:var(--ink-soft); font-size:13px; font-weight:700;
+    white-space:nowrap;
+  }
+  .chip.selected{ background:var(--mocha); border-color:var(--mocha); color:#fff; }
+
+  /* ---- Tab bar ---- */
+  .tabbar{
+    position:fixed; left:0; right:0; bottom:0;
+    max-width:460px; margin:0 auto;
+    display:flex;
+    background:var(--card);
+    border-top:1px solid var(--line);
+    padding:8px 10px calc(8px + env(safe-area-inset-bottom));
+    z-index:20;
+    box-shadow:0 -2px 10px rgba(60,36,20,0.08);
+  }
+  .tab-btn{
+    flex:1; display:flex; flex-direction:column; align-items:center; gap:2px;
+    background:none; border:none; padding:6px 4px;
+    color:var(--ink-soft);
+    transition:transform 0.1s ease;
+  }
+  .tab-btn:active{ transform:scale(0.92); }
+  .tab-btn svg{ width:22px; height:22px; }
+  .tab-btn span{ font-size:10.5px; font-weight:700; }
+  .tab-btn.active{ color:var(--mocha); }
 
   /* ---- Detail (bottom sheet) ---- */
   .sheet{
@@ -262,164 +261,107 @@
     max-width:460px;
     margin:0 auto;
     background:
-      radial-gradient(ellipse 500px 300px at 10% 0%, rgba(211,166,107,0.18), transparent 55%),
+      radial-gradient(ellipse 500px 300px at 10% 0%, rgba(221,173,108,0.18), transparent 55%),
       var(--cream-bg);
     transform:translateY(100%);
     transition:transform 0.28s ease;
     overflow-y:auto;
     -webkit-overflow-scrolling:touch;
-    scrollbar-width:none;
-    -ms-overflow-style:none;
-    z-index:10;
+    scrollbar-width:none; -ms-overflow-style:none;
+    z-index:30;
   }
   .sheet::-webkit-scrollbar{ display:none; }
   .sheet.open{ transform:translateY(0); }
 
   .sheet-top{
-    display:flex;
-    align-items:center;
-    gap:12px;
+    display:flex; align-items:center; gap:12px;
     padding:calc(20px + env(safe-area-inset-top)) 18px 6px;
   }
   .back-btn{
-    background:none;
-    border:none;
-    font-size:20px;
-    color:var(--ink);
-    padding:4px 6px 4px 0;
-    line-height:1;
+    background:none; border:none; padding:6px 6px 6px 0; color:var(--ink);
     transition:transform 0.1s ease, opacity 0.1s ease;
   }
-  .back-btn:active{ transform:scale(0.9); opacity:0.7; }
+  .back-btn:active{ transform:scale(0.88); opacity:0.7; }
+  .back-btn svg{ width:22px; height:22px; display:block; }
   .sheet-title{ min-width:0; }
   .sheet-title h2{
-    font-family:var(--font-display);
-    font-weight:400;
-    font-size:19px;
-    margin:0;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
+    font-family:var(--font-display); font-weight:400; font-size:19px; margin:0;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   }
   .sheet-title p{
-    margin:2px 0 0;
-    font-size:12.5px;
-    color:var(--ink-soft);
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
+    margin:2px 0 0; font-size:12.5px; color:var(--ink-soft);
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   }
 
-  .total-block{
-    text-align:center;
-    padding:18px 20px 6px;
-  }
-  .total-number{
-    font-family:var(--font-display);
-    font-size:52px;
-    color:var(--mocha);
-    line-height:1;
-  }
-  .total-number span{
-    font-size:20px;
-    color:var(--ink-soft);
-    font-family:var(--font-body);
-  }
-  .total-bar{
-    height:5px;
-    background:var(--line);
-    border-radius:3px;
-    margin:14px 20px 0;
-    overflow:hidden;
-  }
+  .total-block{ text-align:center; padding:16px 20px 6px; }
+  .total-number{ font-family:var(--font-display); font-size:50px; color:var(--mocha); line-height:1; }
+  .total-number span{ font-size:19px; color:var(--ink-soft); font-family:var(--font-body); }
+  .total-bar{ height:5px; background:var(--line); border-radius:3px; margin:14px 20px 0; overflow:hidden; }
   .total-bar-fill{
     height:100%;
     background:linear-gradient(90deg, var(--espresso), var(--mocha) 55%, var(--latte));
     transition:width 0.25s ease;
   }
 
-  .criteria{ padding:10px 18px 6px; }
-  .criterion{
-    padding:16px 0;
-    border-bottom:1px solid var(--line);
-  }
-  .criterion-label{
-    font-size:14.5px;
-    font-weight:600;
-  }
-  .criterion-desc{
-    font-size:12px;
-    color:var(--ink-soft);
-    margin-top:1px;
-  }
-  .pills{
-    display:flex;
-    gap:7px;
-    margin-top:10px;
-    flex-wrap:wrap;
-  }
+  .criteria{ padding:8px 18px 4px; }
+  .criterion{ padding:15px 0; border-bottom:1px solid var(--line); }
+  .criterion-label{ font-size:14.5px; font-weight:700; }
+  .criterion-desc{ font-size:12px; color:var(--ink-soft); margin-top:1px; }
+  .pills{ display:flex; gap:7px; margin-top:10px; flex-wrap:wrap; }
   .pill{
-    min-width:34px;
-    height:34px;
-    padding:0 10px;
-    border-radius:17px;
-    border:1px solid var(--line);
-    background:var(--card);
-    color:var(--ink);
-    font-size:13.5px;
-    font-weight:600;
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    min-width:34px; height:34px; padding:0 10px;
+    border-radius:17px; border:1px solid var(--line);
+    background:var(--card); color:var(--ink);
+    font-size:13.5px; font-weight:700;
+    display:flex; align-items:center; justify-content:center;
     transition:transform 0.1s ease, opacity 0.1s ease;
   }
   .pill:active{ transform:scale(0.9); }
-  .pill.selected{
-    background:var(--mocha);
-    border-color:var(--mocha);
-    color:#fff;
-    box-shadow:0 2px 6px rgba(60,36,20,0.25);
-  }
+  .pill.selected{ background:var(--mocha); border-color:var(--mocha); color:#fff; box-shadow:0 2px 6px rgba(60,36,20,0.25); }
 
-  .notes-block{ padding:16px 18px calc(10px + env(safe-area-inset-bottom)); }
-  .notes-block label{
-    font-size:13px;
-    font-weight:600;
-    display:block;
-    margin-bottom:6px;
-  }
+  .notes-block{ padding:14px 18px 4px; }
+  .notes-block label{ font-size:13px; font-weight:700; display:block; margin-bottom:6px; }
   .notes-block textarea{
-    width:100%;
-    min-height:64px;
-    font-family:inherit;
-    font-size:14px;
+    width:100%; min-height:60px;
+    font-family:inherit; font-size:14px;
     padding:10px 12px;
-    border:1px solid var(--line);
-    border-radius:6px;
-    background:var(--card);
-    color:var(--ink);
+    border:1px solid var(--line); border-radius:8px;
+    background:var(--card); color:var(--ink);
     resize:vertical;
   }
 
-  .delete-block{
-    padding:4px 18px calc(32px + env(safe-area-inset-bottom));
-    text-align:center;
+  .sheet-actions{
+    padding:8px 16px calc(28px + env(safe-area-inset-bottom));
+    display:flex; flex-direction:column; gap:2px;
   }
-  .delete-link{
-    background:none;
-    border:none;
-    color:var(--ink-soft);
-    font-size:12.5px;
-    text-decoration:underline;
-    padding:8px;
+  .text-action{
+    display:flex; align-items:center; gap:8px;
+    background:none; border:none;
+    padding:11px 6px; border-radius:8px;
+    font-size:13.5px; font-weight:700; color:var(--ink-soft);
+    transition:opacity 0.1s ease;
   }
+  .text-action:active{ opacity:0.6; }
+  .text-action svg{ width:16px; height:16px; }
+  .text-action.danger{ color:var(--danger); }
 
-  .loading{
-    padding:60px 20px;
-    text-align:center;
-    color:var(--ink-soft);
-    font-size:14px;
+  /* ---- Confirm modal ---- */
+  .modal-overlay{
+    position:fixed; top:0; right:0; bottom:0; left:0;
+    background:rgba(42,27,16,0.5);
+    display:flex; align-items:center; justify-content:center;
+    padding:28px; z-index:50;
   }
+  .modal-box{
+    background:var(--card); border-radius:18px;
+    padding:24px 20px 20px; max-width:300px; width:100%;
+    box-shadow:0 12px 30px rgba(0,0,0,0.3);
+  }
+  .modal-box p{ margin:0 0 18px; font-size:14.5px; color:var(--ink); text-align:center; line-height:1.4; }
+  .modal-actions{ display:flex; gap:10px; }
+  .modal-actions .btn{ flex:1; }
+
+  .loading{ padding:60px 20px; text-align:center; color:var(--ink-soft); font-size:14px; }
 </style>
 </head>
 <body>
@@ -427,7 +369,8 @@
 
 <script>
 (function(){
-  var STORAGE_KEY = 'cafes-v1';
+  var STORAGE_KEY = 'cafes-v2';
+  var OLD_STORAGE_KEY = 'cafes-v1';
 
   /* ---------- Storage backend: Claude artifact storage, with a
      localStorage fallback when opened outside Claude (plain browser) ---------- */
@@ -461,6 +404,18 @@
     };
   })();
 
+  var ICONS = {
+    cup: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h13a3 3 0 0 1 0 6h-1"/><path d="M4 8v7a4 4 0 0 0 4 4h4a4 4 0 0 0 4-4v-1"/><path d="M8 2c-.6 1 .6 1.5 0 3M12 2c-.6 1 .6 1.5 0 3"/></svg>',
+    trophy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4h8v4a4 4 0 0 1-8 0V4Z"/><path d="M8 5H5a3 3 0 0 0 3 4M16 5h3a3 3 0 0 1-3 4"/><path d="M12 12v3M9 19h6M10 19v-2.3a2 2 0 0 1 4 0V19"/></svg>',
+    chevron: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>',
+    back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>',
+    plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>',
+    refresh: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11A8 8 0 1 0 18 16"/><path d="M20 5v6h-6"/></svg>',
+    trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>'
+  };
+
+  var AVATAR_COLORS = ['#A8672E','#7A4A20','#C9955A','#8F5A2E','#5C3A1E','#B37D3F'];
+
   var CRITERIA = [
     { key:'cafe',        label:'Café',            desc:'Qualité, goût, choix de torréfactions', max:5, binary:false },
     { key:'ambiance',    label:'Lieu & Ambiance',  desc:'Déco, calme, luminosité, terrasse, concept', max:5, binary:false },
@@ -470,6 +425,9 @@
     { key:'autres',      label:'Autres',           desc:'Wifi, prises, rapport qualité-prix…', max:5, binary:false }
   ];
   var MAX_TOTAL = CRITERIA.reduce(function(s,c){ return s+c.max; }, 0);
+  var RANK_OPTIONS = [{ key:'total', label:'Total', max:MAX_TOTAL }].concat(
+    CRITERIA.map(function(c){ return { key:c.key, label:c.label, max:c.max }; })
+  );
 
   var DEFAULT_CAFES = [
     ["Nola Coffee", "22 Rue de l'Université"],
@@ -503,9 +461,11 @@
   var state = {
     loading: true,
     cafes: [],
-    view: 'list',
+    tab: 'cafes',
+    rankBy: 'total',
     activeId: null,
-    addingNew: false
+    addingNew: false,
+    confirm: null
   };
 
   var saveTimer = null;
@@ -528,9 +488,22 @@
     return CRITERIA.reduce(function(s,c){ return s + (cafe.scores[c.key] || 0); }, 0);
   }
 
+  function criterionValue(cafe, key){
+    if (key === 'total') return hasAnyRating(cafe) ? totalScore(cafe) : null;
+    var v = cafe.scores[key];
+    return (v === undefined) ? null : v;
+  }
+
   function getActiveCafe(){
     for (var i=0;i<state.cafes.length;i++){
       if (state.cafes[i].id === state.activeId) return state.cafes[i];
+    }
+    return null;
+  }
+
+  function findCafe(id){
+    for (var i=0;i<state.cafes.length;i++){
+      if (state.cafes[i].id === id) return state.cafes[i];
     }
     return null;
   }
@@ -541,60 +514,70 @@
     });
   }
 
-  var HERO_SVG =
-    '<svg class="hero-swirl" viewBox="0 0 400 190" preserveAspectRatio="none" aria-hidden="true">' +
-    '<path d="M 205 24 C 248 4, 300 34, 284 78 C 271 116, 326 106, 338 148" stroke="var(--milk)" stroke-opacity="0.5" stroke-width="5" fill="none" stroke-linecap="round"/>' +
-    '<path d="M 190 55 C 222 88, 178 118, 222 148 C 256 172, 300 158, 332 172" stroke="var(--latte)" stroke-opacity="0.55" stroke-width="4" fill="none" stroke-linecap="round"/>' +
-    '<circle cx="246" cy="38" r="4" fill="var(--milk)" opacity="0.5"/>' +
-    '<circle cx="308" cy="94" r="3" fill="var(--milk)" opacity="0.45"/>' +
-    '<circle cx="268" cy="140" r="3.5" fill="var(--milk)" opacity="0.4"/>' +
-    '</svg>';
-
-  var HERO_EXTRAS =
-    '<div class="ice-cube ice-1"></div><div class="ice-cube ice-2"></div><div class="ice-cube ice-3"></div>' +
-    '<div class="drip drip-1"></div><div class="drip drip-2"></div><div class="drip drip-3"></div>';
-
-  function render(){
-    var app = document.getElementById('app');
-    if (state.loading){
-      app.innerHTML =
-        '<div class="hero">' + HERO_SVG +
-        '<div class="hero-text"><h1>Carnet café</h1><p>Centre-ville de Montpellier</p></div>' +
-        HERO_EXTRAS + '</div>' +
-        '<div class="loading">Chargement du carnet…</div>';
-      return;
-    }
-    app.innerHTML = renderList() + renderDetail();
+  function avatarColor(name){
+    var h = 0;
+    for (var i=0;i<name.length;i++){ h = (h*31 + name.charCodeAt(i)) % 997; }
+    return AVATAR_COLORS[h % AVATAR_COLORS.length];
   }
 
-  function renderList(){
+  function initials(name){
+    return (name.trim().charAt(0) || '?').toUpperCase();
+  }
+
+  function ringSvg(pct, size, stroke){
+    var r = (size - stroke) / 2;
+    var c = 2 * Math.PI * r;
+    var dash = Math.max(0, Math.min(1, pct/100)) * c;
+    var cx = size/2, cy = size/2;
+    return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'">' +
+      '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="#E9D7B4" stroke-width="'+stroke+'"/>' +
+      '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="#A8672E" stroke-width="'+stroke+'" stroke-linecap="round" ' +
+        'stroke-dasharray="'+dash.toFixed(1)+' '+c.toFixed(1)+'" transform="rotate(-90 '+cx+' '+cy+')"/>' +
+      '</svg>';
+  }
+
+  /* ---------- Card renderers ---------- */
+
+  function badgeForTotal(cafe){
+    if (hasAnyRating(cafe)){
+      var pct = (totalScore(cafe)/MAX_TOTAL)*100;
+      return '<div class="ring-badge">' + ringSvg(pct,46,4) + '<div class="ring-value">'+totalScore(cafe)+'</div></div>';
+    }
+    var color = avatarColor(cafe.name);
+    return '<div class="avatar-badge" style="background:'+color+'22;color:'+color+'">'+initials(cafe.name)+'</div>';
+  }
+
+  function badgeForCriterion(cafe, key, max){
+    var val = criterionValue(cafe, key);
+    if (val !== null){
+      var pct = (val/max)*100;
+      return '<div class="ring-badge">' + ringSvg(pct,40,4) + '<div class="ring-value small">'+val+'</div></div>';
+    }
+    return '<div class="avatar-badge small" style="background:var(--line);color:var(--ink-soft)">–</div>';
+  }
+
+  function cafeCard(cafe, badgeHtml, leadingHtml){
+    return '<button class="cafe-card" data-action="open" data-id="'+cafe.id+'">' +
+      (leadingHtml || '') + badgeHtml +
+      '<div class="cafe-info"><div class="cafe-name">'+escapeHtml(cafe.name)+'</div><div class="cafe-addr">'+escapeHtml(cafe.address)+'</div></div>' +
+      '<div class="chev">'+ICONS.chevron+'</div>' +
+      '</button>';
+  }
+
+  /* ---------- Tab: Cafés ---------- */
+
+  function renderCafesTab(){
     var rated = state.cafes.filter(hasAnyRating).sort(function(a,b){ return totalScore(b)-totalScore(a); });
     var unrated = state.cafes.filter(function(c){ return !hasAnyRating(c); });
     var ordered = rated.concat(unrated);
 
-    var html = '';
-    html += '<div class="hero">' + HERO_SVG;
-    html += '<div class="hero-text"><h1>Carnet café</h1><p>Centre-ville de Montpellier</p></div>';
-    html += HERO_EXTRAS + '</div>';
+    var html = '<div class="hero"><div class="hero-text"><h1>Carnet café</h1><p>Centre-ville de Montpellier</p></div></div>';
 
-    html += '<div class="progress-line">' + rated.length + ' sur ' + state.cafes.length + ' notés</div>';
+    html += '<div class="list-header"><span>' + rated.length + ' sur ' + state.cafes.length + ' notés</span>';
+    html += '<button class="link-btn" data-action="reset-all">' + ICONS.refresh + ' Tout réinitialiser</button></div>';
 
-    html += '<div class="list">';
-    ordered.forEach(function(cafe){
-      var scored = hasAnyRating(cafe);
-      html += '<button class="row" data-action="open" data-id="' + cafe.id + '">';
-      html += '<div class="row-main">';
-      html += '<div class="row-name">' + escapeHtml(cafe.name) + '</div>';
-      html += '<div class="row-addr">' + escapeHtml(cafe.address) + '</div>';
-      html += '</div>';
-      if (scored){
-        html += '<div class="row-score">' + totalScore(cafe) + '<span class="max">/' + MAX_TOTAL + '</span></div>';
-      } else {
-        html += '<div class="row-score unrated">à noter</div>';
-      }
-      html += '<div class="chevron">›</div>';
-      html += '</button>';
-    });
+    html += '<div class="cafe-list">';
+    ordered.forEach(function(cafe){ html += cafeCard(cafe, badgeForTotal(cafe)); });
 
     if (state.addingNew){
       html += '<div class="new-form">';
@@ -605,71 +588,150 @@
       html += '<button class="btn" data-action="cancel-add">Annuler</button>';
       html += '</div></div>';
     } else {
-      html += '<button class="add-row" data-action="start-add">+ Ajouter un café</button>';
+      html += '<button class="add-row" data-action="start-add">' + ICONS.plus + ' Ajouter un café</button>';
     }
     html += '</div>';
     return html;
   }
 
+  /* ---------- Tab: Classement ---------- */
+
+  function rankedList(key, max){
+    var withVal = [], withoutVal = [];
+    state.cafes.forEach(function(c){
+      if (criterionValue(c, key) !== null) withVal.push(c); else withoutVal.push(c);
+    });
+    withVal.sort(function(a,b){
+      var diff = criterionValue(b,key) - criterionValue(a,key);
+      return diff !== 0 ? diff : a.name.localeCompare(b.name);
+    });
+    withoutVal.sort(function(a,b){ return a.name.localeCompare(b.name); });
+    return withVal.concat(withoutVal);
+  }
+
+  function renderRankingTab(){
+    var opt = null;
+    for (var i=0;i<RANK_OPTIONS.length;i++){ if (RANK_OPTIONS[i].key === state.rankBy) opt = RANK_OPTIONS[i]; }
+    if (!opt) opt = RANK_OPTIONS[0];
+
+    var html = '<div class="ranking-header"><h1>Classement</h1><p>Choisis un critère pour classer les cafés</p></div>';
+    html += '<div class="chips">';
+    RANK_OPTIONS.forEach(function(o){
+      html += '<button class="chip'+(o.key===opt.key?' selected':'')+'" data-action="select-rank" data-key="'+o.key+'">'+o.label+'</button>';
+    });
+    html += '</div>';
+
+    html += '<div class="ranking-list">';
+    rankedList(opt.key, opt.max).forEach(function(cafe, idx){
+      var rankClass = (idx < 3 && criterionValue(cafe, opt.key) !== null) ? 'rank-chip top' : 'rank-chip';
+      var leading = '<div class="'+rankClass+'">'+(idx+1)+'</div>';
+      html += cafeCard(cafe, badgeForCriterion(cafe, opt.key, opt.max), leading);
+    });
+    html += '</div>';
+    return html;
+  }
+
+  /* ---------- Tab bar ---------- */
+
+  function renderTabBar(){
+    return '<div class="tabbar">' +
+      '<button class="tab-btn'+(state.tab==='cafes'?' active':'')+'" data-action="switch-tab" data-tab="cafes">'+ICONS.cup+'<span>Cafés</span></button>' +
+      '<button class="tab-btn'+(state.tab==='ranking'?' active':'')+'" data-action="switch-tab" data-tab="ranking">'+ICONS.trophy+'<span>Classement</span></button>' +
+      '</div>';
+  }
+
+  /* ---------- Detail sheet ---------- */
+
   function renderDetail(){
     var cafe = getActiveCafe();
-    var open = state.view === 'detail' && cafe;
-    var html = '<div class="sheet' + (open ? ' open' : '') + '">';
+    var html = '<div class="sheet'+(cafe?' open':'')+'">';
     if (cafe){
       var total = totalScore(cafe);
       var pct = Math.round((total / MAX_TOTAL) * 100);
 
       html += '<div class="sheet-top">';
-      html += '<button class="back-btn" data-action="back">←</button>';
-      html += '<div class="sheet-title">';
-      html += '<h2>' + escapeHtml(cafe.name) + '</h2>';
-      html += '<p>' + escapeHtml(cafe.address) + '</p>';
-      html += '</div></div>';
-
-      html += '<div class="total-block">';
-      html += '<div class="total-number">' + total + '<span>/' + MAX_TOTAL + '</span></div>';
+      html += '<button class="back-btn" data-action="back">'+ICONS.back+'</button>';
+      html += '<div class="sheet-title"><h2>'+escapeHtml(cafe.name)+'</h2><p>'+escapeHtml(cafe.address)+'</p></div>';
       html += '</div>';
-      html += '<div class="total-bar"><div class="total-bar-fill" style="width:' + pct + '%"></div></div>';
+
+      html += '<div class="total-block"><div class="total-number">'+total+'<span>/'+MAX_TOTAL+'</span></div></div>';
+      html += '<div class="total-bar"><div class="total-bar-fill" style="width:'+pct+'%"></div></div>';
 
       html += '<div class="criteria">';
       CRITERIA.forEach(function(c){
         html += '<div class="criterion">';
-        html += '<div class="criterion-label">' + c.label + ' <span style="color:var(--ink-soft);font-weight:400;">/' + c.max + '</span></div>';
-        if (c.desc) html += '<div class="criterion-desc">' + c.desc + '</div>';
+        html += '<div class="criterion-label">'+c.label+' <span style="color:var(--ink-soft);font-weight:400;">/'+c.max+'</span></div>';
+        if (c.desc) html += '<div class="criterion-desc">'+c.desc+'</div>';
         html += '<div class="pills">';
         for (var v=0; v<=c.max; v++){
           var sel = cafe.scores[c.key] === v;
           var lbl = c.binary ? (v === 1 ? 'Oui' : 'Non') : String(v);
-          html += '<button class="pill' + (sel?' selected':'') + '" data-action="set-score" data-key="' + c.key + '" data-value="' + v + '">' + lbl + '</button>';
+          html += '<button class="pill'+(sel?' selected':'')+'" data-action="set-score" data-key="'+c.key+'" data-value="'+v+'">'+lbl+'</button>';
         }
         html += '</div></div>';
       });
       html += '</div>';
 
-      html += '<div class="notes-block">';
-      html += '<label for="comment-field">Notes</label>';
-      html += '<textarea id="comment-field" data-action="comment" placeholder="Note libre (optionnel)">' + escapeHtml(cafe.comment) + '</textarea>';
-      html += '</div>';
+      html += '<div class="notes-block"><label for="comment-field">Notes</label>';
+      html += '<textarea id="comment-field" data-action="comment" placeholder="Note libre (optionnel)">'+escapeHtml(cafe.comment)+'</textarea></div>';
 
+      html += '<div class="sheet-actions">';
+      html += '<button class="text-action" data-action="ask-reset-one">'+ICONS.refresh+' Réinitialiser les notes</button>';
       if (cafe.custom){
-        html += '<div class="delete-block"><button class="delete-link" data-action="delete-cafe">Supprimer ce café</button></div>';
+        html += '<button class="text-action danger" data-action="ask-delete">'+ICONS.trash+' Supprimer ce café</button>';
       }
+      html += '</div>';
     }
     html += '</div>';
     return html;
   }
+
+  /* ---------- Confirm modal ---------- */
+
+  function renderModal(){
+    if (!state.confirm) return '';
+    return '<div class="modal-overlay" data-action="modal-cancel">' +
+      '<div class="modal-box" data-action="noop">' +
+      '<p>'+escapeHtml(state.confirm.message)+'</p>' +
+      '<div class="modal-actions">' +
+      '<button class="btn" data-action="modal-cancel">Annuler</button>' +
+      '<button class="btn btn-danger" data-action="modal-confirm">Confirmer</button>' +
+      '</div></div></div>';
+  }
+
+  /* ---------- Root render ---------- */
+
+  function render(){
+    var app = document.getElementById('app');
+    if (state.loading){
+      app.innerHTML =
+        '<div class="hero"><div class="hero-text"><h1>Carnet café</h1><p>Centre-ville de Montpellier</p></div></div>' +
+        '<div class="loading">Chargement du carnet…</div>';
+      return;
+    }
+    var main = state.tab === 'ranking' ? renderRankingTab() : renderCafesTab();
+    app.innerHTML = main + renderTabBar() + renderDetail() + renderModal();
+  }
+
+  /* ---------- Events ---------- */
 
   document.getElementById('app').addEventListener('click', function(e){
     var el = e.target.closest('[data-action]');
     if (!el) return;
     var action = el.getAttribute('data-action');
 
-    if (action === 'open'){
+    if (action === 'noop'){
+      return;
+    } else if (action === 'switch-tab'){
+      state.tab = el.getAttribute('data-tab');
+      render();
+    } else if (action === 'select-rank'){
+      state.rankBy = el.getAttribute('data-key');
+      render();
+    } else if (action === 'open'){
       state.activeId = el.getAttribute('data-id');
-      state.view = 'detail';
       render();
     } else if (action === 'back'){
-      state.view = 'list';
       state.activeId = null;
       render();
     } else if (action === 'set-score'){
@@ -705,13 +767,37 @@
       state.addingNew = false;
       scheduleSave();
       render();
-    } else if (action === 'delete-cafe'){
-      var cafe2 = getActiveCafe();
-      if (!cafe2) return;
-      state.cafes = state.cafes.filter(function(c){ return c.id !== cafe2.id; });
-      state.view = 'list';
-      state.activeId = null;
-      scheduleSave();
+    } else if (action === 'reset-all'){
+      state.confirm = { type:'reset-all', message:'Réinitialiser les notes de tous les cafés ? Cette action est irréversible.' };
+      render();
+    } else if (action === 'ask-reset-one'){
+      var cr = getActiveCafe();
+      if (!cr) return;
+      state.confirm = { type:'reset-one', id:cr.id, message:'Réinitialiser les notes de « '+cr.name+' » ?' };
+      render();
+    } else if (action === 'ask-delete'){
+      var cd = getActiveCafe();
+      if (!cd) return;
+      state.confirm = { type:'delete-one', id:cd.id, message:'Supprimer « '+cd.name+' » de ton carnet ? Cette action est irréversible.' };
+      render();
+    } else if (action === 'modal-cancel'){
+      state.confirm = null;
+      render();
+    } else if (action === 'modal-confirm'){
+      var conf = state.confirm;
+      if (conf){
+        if (conf.type === 'reset-all'){
+          state.cafes.forEach(function(c){ c.scores = emptyScores(); });
+        } else if (conf.type === 'reset-one'){
+          var t1 = findCafe(conf.id);
+          if (t1) t1.scores = emptyScores();
+        } else if (conf.type === 'delete-one'){
+          state.cafes = state.cafes.filter(function(c){ return c.id !== conf.id; });
+          state.activeId = null;
+        }
+        scheduleSave();
+      }
+      state.confirm = null;
       render();
     }
   });
@@ -725,30 +811,40 @@
     }
   });
 
+  /* ---------- Init ---------- */
+
+  function normalize(loaded){
+    loaded.forEach(function(c){
+      if (!c.scores) c.scores = emptyScores();
+      CRITERIA.forEach(function(cr){ if (!(cr.key in c.scores)) c.scores[cr.key] = null; });
+      if (typeof c.comment !== 'string') c.comment = '';
+      if (typeof c.custom !== 'boolean') c.custom = false;
+    });
+    return loaded;
+  }
+
   function init(){
     storageBackend.get(STORAGE_KEY).then(function(value){
       var loaded = null;
       try { loaded = JSON.parse(value); } catch(e){ loaded = null; }
-      if (Array.isArray(loaded) && loaded.length){
-        loaded.forEach(function(c){
-          if (!c.scores) c.scores = emptyScores();
-          CRITERIA.forEach(function(cr){
-            if (!(cr.key in c.scores)) c.scores[cr.key] = null;
-          });
-          if (typeof c.comment !== 'string') c.comment = '';
-          if (typeof c.custom !== 'boolean') c.custom = false;
-        });
-        state.cafes = loaded;
-      } else {
-        state.cafes = DEFAULT_CAFES;
-      }
+      state.cafes = (Array.isArray(loaded) && loaded.length) ? normalize(loaded) : DEFAULT_CAFES;
       state.loading = false;
       render();
     }).catch(function(){
-      state.cafes = DEFAULT_CAFES;
-      state.loading = false;
-      render();
-      storageBackend.set(STORAGE_KEY, JSON.stringify(state.cafes)).catch(function(){});
+      // migrate from the previous single-tab version's storage key, if present
+      storageBackend.get(OLD_STORAGE_KEY).then(function(oldValue){
+        var oldLoaded = null;
+        try { oldLoaded = JSON.parse(oldValue); } catch(e){ oldLoaded = null; }
+        state.cafes = (Array.isArray(oldLoaded) && oldLoaded.length) ? normalize(oldLoaded) : DEFAULT_CAFES;
+        state.loading = false;
+        render();
+        storageBackend.set(STORAGE_KEY, JSON.stringify(state.cafes)).catch(function(){});
+      }).catch(function(){
+        state.cafes = DEFAULT_CAFES;
+        state.loading = false;
+        render();
+        storageBackend.set(STORAGE_KEY, JSON.stringify(state.cafes)).catch(function(){});
+      });
     });
   }
 
