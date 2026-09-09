@@ -49,26 +49,33 @@
   }
   body{
     margin:0;
-    background:var(--cream-bg);
+    background:var(--espresso);
     color:var(--ink);
     font-family:var(--font-body);
-    display:flex;
-    justify-content:center;
+  }
+  #bg-photo{
+    position:fixed;
+    top:0; right:0; bottom:0; left:0;
+    background-image:
+      linear-gradient(180deg, rgba(20,10,5,0.55) 0%, rgba(20,10,5,0.25) 150px, rgba(20,10,5,0.12) 280px, rgba(20,10,5,0.4) 100%),
+      url('fond-cafe.jpg');
+    background-size:cover;
+    background-position:center;
+    z-index:0;
   }
   #app{
+    position:fixed;
+    top:0; bottom:0; left:50%;
+    transform:translateX(-50%);
     width:100%;
     max-width:460px;
-    height:100%;
     overflow-y:auto;
     overflow-x:hidden;
     -webkit-overflow-scrolling:touch;
     scrollbar-width:none;
     -ms-overflow-style:none;
-    background:
-      radial-gradient(ellipse 500px 300px at 10% 0%, rgba(221,173,108,0.20), transparent 60%),
-      radial-gradient(ellipse 400px 300px at 95% 20%, rgba(168,103,46,0.12), transparent 55%),
-      var(--cream-bg);
-    position:relative;
+    background:transparent;
+    z-index:1;
   }
   #app::-webkit-scrollbar{ display:none; }
   button{ font-family:inherit; cursor:pointer; }
@@ -81,45 +88,34 @@
   }
   svg{ pointer-events:none; }
 
-  /* ---- Hero (Cafés tab) ---- */
-  .hero{
-    position:relative;
-    height:calc(190px + env(safe-area-inset-top));
-    margin:0 0 20px;
-    border-radius:0 0 26px 26px;
-    overflow:hidden;
-    background-color:var(--espresso);
-    background-image:
-      linear-gradient(135deg, rgba(28,15,8,0.62) 0%, rgba(28,15,8,0.22) 45%, rgba(28,15,8,0.05) 70%),
-      url('fond-cafe.jpg');
-    background-size:cover;
-    background-position:center;
-    box-shadow:0 8px 20px -10px rgba(43,23,16,0.5);
+  /* ---- Top header (icon acts as the banner) ---- */
+  .top-header{ padding:calc(16px + env(safe-area-inset-top)) 20px 14px; }
+  .top-header-chip{
+    display:inline-flex; align-items:center; gap:10px;
+    background:rgba(20,10,5,0.42);
+    -webkit-backdrop-filter:blur(12px);
+    backdrop-filter:blur(12px);
+    border-radius:18px;
+    padding:8px 16px 8px 8px;
   }
-  .hero-text{ position:relative; z-index:3; padding:calc(24px + env(safe-area-inset-top)) 22px 0; }
-  .hero-text h1{
-    font-family:var(--font-display);
-    font-weight:400;
-    font-size:28px;
-    margin:0 0 4px;
-    color:var(--milk);
-    text-shadow:0 1px 4px rgba(0,0,0,0.28);
-    letter-spacing:0.2px;
+  .top-header-chip img{
+    width:38px; height:38px; border-radius:10px; display:block;
+    box-shadow:0 2px 6px rgba(0,0,0,0.3);
   }
-  .hero-text p{
-    margin:0;
-    font-size:13px;
-    color:rgba(255,246,233,0.82);
+  .top-header-chip h1{
+    font-family:var(--font-display); font-weight:400; font-size:19px;
+    margin:0; color:var(--milk);
   }
+  .top-header-chip p{ margin:1px 0 0; font-size:12px; color:rgba(255,246,233,0.82); }
   .list-header{
     display:flex; align-items:center; justify-content:space-between;
     padding:0 20px 10px;
   }
-  .list-header span{ font-size:12.5px; color:var(--ink-soft); }
+  .list-header span{ font-size:12.5px; color:rgba(255,246,233,0.85); text-shadow:0 1px 2px rgba(0,0,0,0.25); }
   .link-btn{
     display:flex; align-items:center; gap:5px;
     background:none; border:none;
-    color:var(--mocha); font-size:12.5px; font-weight:700;
+    color:var(--latte); font-size:12.5px; font-weight:700;
     padding:4px;
   }
   .link-btn svg{ width:14px; height:14px; }
@@ -211,23 +207,22 @@
   .btn-danger{ background:var(--danger); border-color:var(--danger); color:#fff; }
 
   /* ---- Ranking tab ---- */
-  .ranking-header{ padding:calc(26px + env(safe-area-inset-top)) 20px 2px; }
-  .ranking-header h1{
-    font-family:var(--font-display); font-weight:400; font-size:26px;
-    margin:0 0 4px; color:var(--ink);
-  }
-  .ranking-header p{ margin:0 0 4px; font-size:13px; color:var(--ink-soft); }
+  .ranking-header{ padding:calc(16px + env(safe-area-inset-top)) 20px 2px; }
+  .ranking-header p.subtitle{ margin:8px 0 0; font-size:13px; color:rgba(255,246,233,0.82); padding:0 2px; }
   .chips{
     display:flex; gap:8px; overflow-x:auto;
-    padding:10px 20px 16px;
+    padding:12px 20px 16px;
     scrollbar-width:none; -ms-overflow-style:none;
   }
   .chips::-webkit-scrollbar{ display:none; }
   .chip{
     flex:0 0 auto;
     padding:8px 14px; border-radius:16px;
-    border:1px solid var(--line); background:var(--card);
-    color:var(--ink-soft); font-size:13px; font-weight:700;
+    border:1px solid rgba(255,246,233,0.4);
+    background:rgba(20,10,5,0.32);
+    -webkit-backdrop-filter:blur(10px);
+    backdrop-filter:blur(10px);
+    color:var(--milk); font-size:13px; font-weight:700;
     white-space:nowrap;
   }
   .chip.selected{ background:var(--mocha); border-color:var(--mocha); color:#fff; }
@@ -237,7 +232,9 @@
     position:fixed; left:0; right:0; bottom:0;
     max-width:460px; margin:0 auto;
     display:flex;
-    background:var(--card);
+    background:rgba(255,252,246,0.85);
+    -webkit-backdrop-filter:blur(16px);
+    backdrop-filter:blur(16px);
     border-top:1px solid var(--line);
     padding:8px 10px calc(8px + env(safe-area-inset-bottom));
     z-index:20;
@@ -361,10 +358,11 @@
   .modal-actions{ display:flex; gap:10px; }
   .modal-actions .btn{ flex:1; }
 
-  .loading{ padding:60px 20px; text-align:center; color:var(--ink-soft); font-size:14px; }
+  .loading{ padding:60px 20px; text-align:center; color:var(--milk); font-size:14px; }
 </style>
 </head>
 <body>
+<div id="bg-photo"></div>
 <div id="app"></div>
 
 <script>
@@ -566,12 +564,19 @@
 
   /* ---------- Tab: Cafés ---------- */
 
+  function topHeader(title, subtitle){
+    return '<div class="top-header"><div class="top-header-chip">' +
+      '<img src="icone.png" alt="">' +
+      '<div><h1>'+title+'</h1><p>'+subtitle+'</p></div>' +
+      '</div></div>';
+  }
+
   function renderCafesTab(){
     var rated = state.cafes.filter(hasAnyRating).sort(function(a,b){ return totalScore(b)-totalScore(a); });
     var unrated = state.cafes.filter(function(c){ return !hasAnyRating(c); });
     var ordered = rated.concat(unrated);
 
-    var html = '<div class="hero"><div class="hero-text"><h1>Carnet café</h1><p>Centre-ville de Montpellier</p></div></div>';
+    var html = topHeader('Carnet café', 'Centre-ville de Montpellier');
 
     html += '<div class="list-header"><span>' + rated.length + ' sur ' + state.cafes.length + ' notés</span>';
     html += '<button class="link-btn" data-action="reset-all">' + ICONS.refresh + ' Tout réinitialiser</button></div>';
@@ -614,7 +619,7 @@
     for (var i=0;i<RANK_OPTIONS.length;i++){ if (RANK_OPTIONS[i].key === state.rankBy) opt = RANK_OPTIONS[i]; }
     if (!opt) opt = RANK_OPTIONS[0];
 
-    var html = '<div class="ranking-header"><h1>Classement</h1><p>Choisis un critère pour classer les cafés</p></div>';
+    var html = topHeader('Classement', 'Choisis un critère pour classer les cafés');
     html += '<div class="chips">';
     RANK_OPTIONS.forEach(function(o){
       html += '<button class="chip'+(o.key===opt.key?' selected':'')+'" data-action="select-rank" data-key="'+o.key+'">'+o.label+'</button>';
@@ -705,7 +710,7 @@
     var app = document.getElementById('app');
     if (state.loading){
       app.innerHTML =
-        '<div class="hero"><div class="hero-text"><h1>Carnet café</h1><p>Centre-ville de Montpellier</p></div></div>' +
+        topHeader('Carnet café', 'Centre-ville de Montpellier') +
         '<div class="loading">Chargement du carnet…</div>';
       return;
     }
