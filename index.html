@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<title>Carnet café — Montpellier</title>
+<title>CoffeeMTP</title>
 
 <!-- PWA / écran d'accueil iPhone -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Carnet café">
+<meta name="apple-mobile-web-app-title" content="CoffeeMTP">
 <meta name="theme-color" content="#3C2414">
 <link rel="apple-touch-icon" href="icone.png">
 <link rel="icon" href="icone.png">
@@ -65,10 +65,9 @@
   }
   #app{
     position:fixed;
-    top:0; bottom:0; left:50%;
-    transform:translateX(-50%);
-    width:100%;
+    top:0; right:0; bottom:0; left:0;
     max-width:460px;
+    margin:0 auto;
     overflow-y:auto;
     overflow-x:hidden;
     -webkit-overflow-scrolling:touch;
@@ -89,24 +88,24 @@
   svg{ pointer-events:none; }
 
   /* ---- Top header (icon acts as the banner) ---- */
-  .top-header{ padding:calc(16px + env(safe-area-inset-top)) 20px 14px; }
+  .top-header{ padding:calc(18px + env(safe-area-inset-top)) 20px 18px; }
   .top-header-chip{
-    display:inline-flex; align-items:center; gap:10px;
-    background:rgba(20,10,5,0.42);
-    -webkit-backdrop-filter:blur(12px);
-    backdrop-filter:blur(12px);
-    border-radius:18px;
-    padding:8px 16px 8px 8px;
+    display:flex; align-items:center; gap:14px;
+    background:rgba(20,10,5,0.46);
+    -webkit-backdrop-filter:blur(14px);
+    backdrop-filter:blur(14px);
+    border-radius:20px;
+    padding:14px 18px;
   }
   .top-header-chip img{
-    width:38px; height:38px; border-radius:10px; display:block;
-    box-shadow:0 2px 6px rgba(0,0,0,0.3);
+    width:64px; height:64px; border-radius:16px; display:block; flex-shrink:0;
+    box-shadow:0 4px 10px rgba(0,0,0,0.35);
   }
   .top-header-chip h1{
-    font-family:var(--font-display); font-weight:400; font-size:19px;
+    font-family:var(--font-display); font-weight:400; font-size:26px;
     margin:0; color:var(--milk);
   }
-  .top-header-chip p{ margin:1px 0 0; font-size:12px; color:rgba(255,246,233,0.82); }
+  .top-header-chip p{ margin:3px 0 0; font-size:13px; color:rgba(255,246,233,0.85); }
   .list-header{
     display:flex; align-items:center; justify-content:space-between;
     padding:0 20px 10px;
@@ -576,7 +575,7 @@
     var unrated = state.cafes.filter(function(c){ return !hasAnyRating(c); });
     var ordered = rated.concat(unrated);
 
-    var html = topHeader('Carnet café', 'Centre-ville de Montpellier');
+    var html = topHeader('CoffeeMTP', 'Centre-ville de Montpellier');
 
     html += '<div class="list-header"><span>' + rated.length + ' sur ' + state.cafes.length + ' notés</span>';
     html += '<button class="link-btn" data-action="reset-all">' + ICONS.refresh + ' Tout réinitialiser</button></div>';
@@ -710,7 +709,7 @@
     var app = document.getElementById('app');
     if (state.loading){
       app.innerHTML =
-        topHeader('Carnet café', 'Centre-ville de Montpellier') +
+        topHeader('CoffeeMTP', 'Centre-ville de Montpellier') +
         '<div class="loading">Chargement du carnet…</div>';
       return;
     }
