@@ -8,7 +8,7 @@
 <!-- PWA / écran d'accueil iPhone -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="CoffeeMTP">
 <meta name="theme-color" content="#3C2414">
 <link rel="apple-touch-icon" href="icone.png">
@@ -58,7 +58,7 @@
   #bg-photo{
     position:fixed;
     top:0; right:0; left:0;
-    height:100vh; height:100dvh; height:calc(100dvh + env(safe-area-inset-bottom));
+    height:100vh; height:100dvh; height:calc(var(--app-height, 100dvh) + env(safe-area-inset-bottom));
     background-image:
       linear-gradient(180deg, rgba(20,10,5,0.55) 0%, rgba(20,10,5,0.25) 150px, rgba(20,10,5,0.12) 280px, rgba(20,10,5,0.4) 100%),
       url('fond-cafe.jpg');
@@ -69,7 +69,7 @@
   #app{
     position:fixed;
     top:0; right:0; left:0;
-    height:100vh; height:100dvh; height:calc(100dvh + env(safe-area-inset-bottom));
+    height:100vh; height:100dvh; height:calc(var(--app-height, 100dvh) + env(safe-area-inset-bottom));
     max-width:460px;
     margin:0 auto;
     display:flex;
@@ -297,7 +297,7 @@
   .sheet{
     position:fixed;
     top:0; right:0; left:0;
-    height:100vh; height:100dvh; height:calc(100dvh + env(safe-area-inset-bottom));
+    height:100vh; height:100dvh; height:calc(var(--app-height, 100dvh) + env(safe-area-inset-bottom));
     max-width:460px;
     margin:0 auto;
     background:
@@ -411,6 +411,20 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 (function(){
+  // iOS standalone PWAs sometimes misreport dvh after the on-screen keyboard
+  // shows/hides. Measuring the real visible height in JS and exposing it as
+  // a CSS variable is more reliable than relying on dvh alone.
+  function setAppHeight(){
+    var h = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+    document.documentElement.style.setProperty('--app-height', h + 'px');
+  }
+  setAppHeight();
+  window.addEventListener('resize', setAppHeight);
+  window.addEventListener('orientationchange', setAppHeight);
+  if (window.visualViewport){
+    window.visualViewport.addEventListener('resize', setAppHeight);
+  }
+
   var STORAGE_KEY = 'cafes-v2';
   var OLD_STORAGE_KEY = 'cafes-v1';
 
@@ -525,18 +539,22 @@
     if (typeof fetch !== 'function') return Promise.resolve(null);
     var query = address + ', Montpellier, France';
     var url = 'https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' + encodeURIComponent(query);
-    var fetchPromise = fetch(url, { headers: { 'Accept': 'application/json' } })
-      .then(function(res){ if (!res.ok) throw new Error('geocode failed'); return res.json(); })
+    var fetchPromise = fetch(url)
+      .then(function(res){ if (!res.ok) throw new Error('geocode HTTP ' + res.status); return res.json(); })
       .then(function(results){
         if (Array.isArray(results) && results.length > 0){
           return { lat: parseFloat(results[0].lat), lng: parseFloat(results[0].lon) };
         }
         return null;
+      })
+      .catch(function(err){
+        console.warn('Géocodage échoué pour "' + address + '" :', err);
+        return null;
       });
     var timeoutPromise = new Promise(function(resolve){
       setTimeout(function(){ resolve(null); }, 6000);
     });
-    return Promise.race([fetchPromise, timeoutPromise]).catch(function(){ return null; });
+    return Promise.race([fetchPromise, timeoutPromise]);
   }
 
   function emptyScores(){
