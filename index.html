@@ -13,6 +13,7 @@
 <meta name="theme-color" content="#3C2414">
 <link rel="apple-touch-icon" href="icone.png">
 <link rel="icon" href="icone.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>
   :root{
     --espresso:#2B1710;
@@ -97,7 +98,40 @@
   svg{ pointer-events:none; }
 
   /* ---- Top header (icon acts as the banner) ---- */
-  .top-header{ padding:calc(18px + env(safe-area-inset-top)) 20px 18px; }
+  #app-scroll.no-scroll{ overflow:hidden; display:flex; flex-direction:column; }
+  .top-header{ flex:0 0 auto; padding:calc(18px + env(safe-area-inset-top)) 20px 18px; }
+
+  .map-container{ flex:1 1 auto; min-height:0; position:relative; }
+  #leaflet-map{ position:absolute; top:0; right:0; bottom:0; left:0; background:var(--cream-bg); }
+  .leaflet-popup-content-wrapper{ border-radius:14px; padding:2px; }
+  .leaflet-popup-content{ margin:12px 14px; }
+  .map-popup-name{ font-size:14.5px; font-weight:700; color:var(--ink); }
+  .map-popup-addr{ font-size:12px; color:var(--ink-soft); margin-top:1px; }
+  .map-popup-score{
+    font-family:var(--font-display); font-size:20px; color:var(--mocha);
+    margin-top:6px;
+  }
+  .map-popup-score span{ font-size:13px; color:var(--ink-soft); font-family:var(--font-body); }
+  .map-popup-score.unrated{ font-family:var(--font-body); font-size:12.5px; color:var(--ink-soft); font-style:italic; }
+  .map-popup-btn{
+    margin-top:8px; width:100%;
+    background:var(--mocha); color:#fff; border:none; border-radius:8px;
+    padding:8px 10px; font-size:13px; font-weight:700;
+  }
+  .map-pin{
+    width:30px; height:30px;
+    border-radius:50% 50% 50% 0;
+    transform:rotate(-45deg);
+    background:var(--mocha);
+    border:2px solid #fff;
+    box-shadow:0 2px 6px rgba(0,0,0,0.35);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .map-pin.unrated{ background:var(--ink-soft); }
+  .map-pin span{
+    transform:rotate(45deg);
+    color:#fff; font-family:var(--font-display); font-size:12px; font-weight:600;
+  }
   .top-header-chip{
     display:flex; align-items:center; gap:14px;
     background:rgba(20,10,5,0.46);
@@ -373,6 +407,7 @@
 <div id="bg-photo"></div>
 <div id="app"></div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 (function(){
   var STORAGE_KEY = 'cafes-v2';
@@ -417,7 +452,8 @@
     back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>',
     plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>',
     refresh: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11A8 8 0 1 0 18 16"/><path d="M20 5v6h-6"/></svg>',
-    trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>'
+    trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>',
+    map: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"/><path d="M9 4v14M15 6v14"/></svg>'
   };
 
   var AVATAR_COLORS = ['#A8672E','#7A4A20','#C9955A','#8F5A2E','#5C3A1E','#B37D3F'];
@@ -436,28 +472,30 @@
   );
 
   var DEFAULT_CAFES = [
-    ["Nola Coffee", "22 Rue de l'Université"],
-    ["Coffee Club Montpellier", "12 Rue Saint-Guilhem"],
-    ["Dyade Coffee", "30 Rue de l'Université"],
-    ["Station Café", "2 Rue de l'Ancien Courrier"],
-    ["Coldrip food and coffee", "4 Rue Glaize"],
-    ["Montpellier Café Solo", "30 Rue Saint-Guilhem"],
-    ["POLANKA Coffee Shop", "4 Rue des Teissiers"],
-    ["ADN Café", "2 Rue de la Carbonnerie"],
-    ["Café Cours", "6 Rue Jacques d'Aragon"],
-    ["Botan - Café & Botanique", "42 Rue de l'Aiguillerie"],
-    ["Café Joyeux", "9 Pl. Alexandre Laissac"],
-    ["French Coffee Shop", "40 Rue Saint-Guilhem"],
-    ["Café BUN - Étuves", "5 Rue des Étuves"],
-    ["De la Sierra - Comédie", "3 Pass. Bruyas"],
-    ["Céleste Coffee Shop", "11 Rue du Palais des Guilhem"],
-    ["Brûlerie du Courreau", "9 Rue du Faubourg du Courreau"],
-    ["Coffea", "1 Rue des Pertuisanes"]
+    ["Nola Coffee", "22 Rue de l'Université", 43.6128369, 3.8768870],
+    ["Coffee Club Montpellier", "12 Rue Saint-Guilhem", 43.6100956, 3.8759509],
+    ["Dyade Coffee", "30 Rue de l'Université", 43.6129818, 3.8770444],
+    ["Station Café", "2 Rue de l'Ancien Courrier", 43.6094282, 3.8754644],
+    ["Coldrip food and coffee", "4 Rue Glaize", 43.6110564, 3.8790040],
+    ["Montpellier Café Solo", "30 Rue Saint-Guilhem", 43.6094254, 3.8748941],
+    ["POLANKA Coffee Shop", "4 Rue des Teissiers", 43.6086488, 3.8751674],
+    ["ADN Café", "2 Rue de la Carbonnerie", 43.6116764, 3.8782134],
+    ["Café Cours", "6 Rue Jacques d'Aragon", 43.6084069, 3.8772035],
+    ["Botan - Café & Botanique", "42 Rue de l'Aiguillerie", 43.6118504, 3.8791494],
+    ["Café Joyeux", "9 Pl. Alexandre Laissac", 43.6060896, 3.8761831],
+    ["French Coffee Shop", "40 Rue Saint-Guilhem", 43.6091585, 3.8743071],
+    ["Café BUN - Étuves", "5 Rue des Étuves", 43.6075065, 3.8778612],
+    ["De la Sierra - Comédie", "3 Pass. Bruyas", 43.6093775, 3.8795106],
+    ["Céleste Coffee Shop", "11 Rue du Palais des Guilhem", 43.6114895, 3.8746578],
+    ["Brûlerie du Courreau", "9 Rue du Faubourg du Courreau", 43.6082704, 3.8721023],
+    ["Coffea", "1 Rue des Pertuisanes", 43.6084224, 3.8841898]
   ].map(function(pair, i){
     return {
       id: 'c' + i,
       name: pair[0],
       address: pair[1],
+      lat: pair[2],
+      lng: pair[3],
       scores: { cafe:null, ambiance:null, gentillesse:null, poussette:null, horaires:null, autres:null },
       comment: '',
       custom: false
@@ -644,12 +682,77 @@
     return html;
   }
 
+  /* ---------- Tab: Carte ---------- */
+
+  var leafletMap = null;
+
+  function renderMapTab(){
+    var located = state.cafes.filter(function(c){ return typeof c.lat === 'number' && typeof c.lng === 'number'; });
+    var subtitle = located.length + ' café' + (located.length > 1 ? 's' : '') + ' localisés sur ' + state.cafes.length;
+    var html = topHeader('Carte', subtitle);
+    html += '<div class="map-container"><div id="leaflet-map"></div></div>';
+    return html;
+  }
+
+  function openCafeDetail(id){
+    state.activeId = id;
+    render();
+  }
+
+  function initMap(){
+    if (typeof L === 'undefined') return;
+    var container = document.getElementById('leaflet-map');
+    if (!container) return;
+    if (leafletMap){ leafletMap.remove(); leafletMap = null; }
+
+    leafletMap = L.map(container, { zoomControl:true, attributionControl:true }).setView([43.6103, 3.8767], 15);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap'
+    }).addTo(leafletMap);
+
+    var located = state.cafes.filter(function(c){ return typeof c.lat === 'number' && typeof c.lng === 'number'; });
+    located.forEach(function(cafe){
+      var rated = hasAnyRating(cafe);
+      var total = totalScore(cafe);
+      var cls = rated ? 'rated' : 'unrated';
+      var label = rated ? String(total) : '–';
+      var icon = L.divIcon({
+        className: 'map-pin-wrap',
+        html: '<div class="map-pin '+cls+'"><span>'+label+'</span></div>',
+        iconSize: [30, 38],
+        iconAnchor: [15, 32],
+        popupAnchor: [0, -30]
+      });
+      var scoreHtml = rated
+        ? '<div class="map-popup-score">'+total+'<span>/'+MAX_TOTAL+'</span></div>'
+        : '<div class="map-popup-score unrated">Pas encore noté</div>';
+      var popupHtml =
+        '<div class="map-popup-name">'+escapeHtml(cafe.name)+'</div>' +
+        '<div class="map-popup-addr">'+escapeHtml(cafe.address)+'</div>' +
+        scoreHtml +
+        '<button class="map-popup-btn" data-open-id="'+cafe.id+'">Voir la fiche</button>';
+
+      var marker = L.marker([cafe.lat, cafe.lng], { icon: icon }).addTo(leafletMap);
+      marker.bindPopup(popupHtml);
+      marker.on('popupopen', function(e){
+        var btn = e.popup.getElement().querySelector('[data-open-id]');
+        if (btn){
+          btn.addEventListener('click', function(){
+            openCafeDetail(this.getAttribute('data-open-id'));
+          });
+        }
+      });
+    });
+  }
+
   /* ---------- Tab bar ---------- */
 
   function renderTabBar(){
     return '<div class="tabbar">' +
       '<button class="tab-btn'+(state.tab==='cafes'?' active':'')+'" data-action="switch-tab" data-tab="cafes">'+ICONS.cup+'<span>Cafés</span></button>' +
       '<button class="tab-btn'+(state.tab==='ranking'?' active':'')+'" data-action="switch-tab" data-tab="ranking">'+ICONS.trophy+'<span>Classement</span></button>' +
+      '<button class="tab-btn'+(state.tab==='map'?' active':'')+'" data-action="switch-tab" data-tab="map">'+ICONS.map+'<span>Carte</span></button>' +
       '</div>';
   }
 
@@ -724,8 +827,20 @@
         '</div>';
       return;
     }
-    var main = state.tab === 'ranking' ? renderRankingTab() : renderCafesTab();
-    app.innerHTML = '<div id="app-scroll">' + main + '</div>' + renderTabBar() + renderDetail() + renderModal();
+    var main;
+    if (state.tab === 'ranking') main = renderRankingTab();
+    else if (state.tab === 'map') main = renderMapTab();
+    else main = renderCafesTab();
+
+    var scrollClass = state.tab === 'map' ? ' class="no-scroll"' : '';
+    app.innerHTML = '<div id="app-scroll"' + scrollClass + '>' + main + '</div>' + renderTabBar() + renderDetail() + renderModal();
+
+    if (state.tab === 'map'){
+      initMap();
+    } else if (leafletMap){
+      leafletMap.remove();
+      leafletMap = null;
+    }
   }
 
   /* ---------- Events ---------- */
@@ -744,8 +859,7 @@
       state.rankBy = el.getAttribute('data-key');
       render();
     } else if (action === 'open'){
-      state.activeId = el.getAttribute('data-id');
-      render();
+      openCafeDetail(el.getAttribute('data-id'));
     } else if (action === 'back'){
       state.activeId = null;
       render();
