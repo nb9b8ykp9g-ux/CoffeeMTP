@@ -245,6 +245,7 @@
     transition:transform 0.1s ease, opacity 0.1s ease;
   }
   .btn:active{ transform:scale(0.97); opacity:0.85; }
+  .btn:disabled{ opacity:0.55; }
   .btn-primary{ background:var(--mocha); border-color:var(--mocha); color:#fff; box-shadow:0 2px 6px rgba(60,36,20,0.25); }
   .btn-danger{ background:var(--danger); border-color:var(--danger); color:#fff; }
 
@@ -518,6 +519,24 @@
     saveTimer = setTimeout(function(){
       storageBackend.set(STORAGE_KEY, JSON.stringify(state.cafes)).catch(function(){});
     }, 400);
+  }
+
+  function geocodeAddress(address){
+    if (typeof fetch !== 'function') return Promise.resolve(null);
+    var query = address + ', Montpellier, France';
+    var url = 'https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' + encodeURIComponent(query);
+    var fetchPromise = fetch(url, { headers: { 'Accept': 'application/json' } })
+      .then(function(res){ if (!res.ok) throw new Error('geocode failed'); return res.json(); })
+      .then(function(results){
+        if (Array.isArray(results) && results.length > 0){
+          return { lat: parseFloat(results[0].lat), lng: parseFloat(results[0].lon) };
+        }
+        return null;
+      });
+    var timeoutPromise = new Promise(function(resolve){
+      setTimeout(function(){ resolve(null); }, 6000);
+    });
+    return Promise.race([fetchPromise, timeoutPromise]).catch(function(){ return null; });
   }
 
   function emptyScores(){
@@ -885,17 +904,34 @@
       var name = (nameEl.value || '').trim();
       var addr = (addrEl.value || '').trim();
       if (!name) { nameEl.focus(); return; }
-      state.cafes.push({
+
+      var cancelBtn = document.querySelector('[data-action="cancel-add"]');
+      el.disabled = true;
+      el.textContent = 'Ajout en cours…';
+      if (cancelBtn) cancelBtn.disabled = true;
+
+      var newCafe = {
         id: 'custom-' + Date.now(),
         name: name,
         address: addr,
         scores: emptyScores(),
         comment: '',
         custom: true
-      });
-      state.addingNew = false;
-      scheduleSave();
-      render();
+      };
+
+      var finishAdd = function(coords){
+        if (coords){ newCafe.lat = coords.lat; newCafe.lng = coords.lng; }
+        state.cafes.push(newCafe);
+        state.addingNew = false;
+        scheduleSave();
+        render();
+      };
+
+      if (addr){
+        geocodeAddress(addr).then(finishAdd);
+      } else {
+        finishAdd(null);
+      }
     } else if (action === 'reset-all'){
       state.confirm = { type:'reset-all', message:'Réinitialiser les notes de tous les cafés ? Cette action est irréversible.' };
       render();
