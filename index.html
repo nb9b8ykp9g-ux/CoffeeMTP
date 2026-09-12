@@ -585,7 +585,7 @@
   function badgeForTotal(cafe){
     if (hasAnyRating(cafe)){
       var pct = (totalScore(cafe)/MAX_TOTAL)*100;
-      return '<div class="ring-badge">' + ringSvg(pct,46,4) + '<div class="ring-value">'+totalScore(cafe)+'</div></div>';
+      return '<div class="ring-badge" style="width:46px;height:46px">' + ringSvg(pct,46,4) + '<div class="ring-value">'+totalScore(cafe)+'</div></div>';
     }
     var color = avatarColor(cafe.name);
     return '<div class="avatar-badge" style="background:'+color+'22;color:'+color+'">'+initials(cafe.name)+'</div>';
@@ -595,7 +595,7 @@
     var val = criterionValue(cafe, key);
     if (val !== null){
       var pct = (val/max)*100;
-      return '<div class="ring-badge">' + ringSvg(pct,40,4) + '<div class="ring-value small">'+val+'</div></div>';
+      return '<div class="ring-badge" style="width:40px;height:40px">' + ringSvg(pct,40,4) + '<div class="ring-value small">'+val+'</div></div>';
     }
     return '<div class="avatar-badge small" style="background:var(--line);color:var(--ink-soft)">–</div>';
   }
@@ -942,12 +942,19 @@
 
   /* ---------- Init ---------- */
 
+  var DEFAULT_COORDS = {};
+  DEFAULT_CAFES.forEach(function(c){ DEFAULT_COORDS[c.id] = { lat: c.lat, lng: c.lng }; });
+
   function normalize(loaded){
     loaded.forEach(function(c){
       if (!c.scores) c.scores = emptyScores();
       CRITERIA.forEach(function(cr){ if (!(cr.key in c.scores)) c.scores[cr.key] = null; });
       if (typeof c.comment !== 'string') c.comment = '';
       if (typeof c.custom !== 'boolean') c.custom = false;
+      if ((typeof c.lat !== 'number' || typeof c.lng !== 'number') && DEFAULT_COORDS[c.id]){
+        c.lat = DEFAULT_COORDS[c.id].lat;
+        c.lng = DEFAULT_COORDS[c.id].lng;
+      }
     });
     return loaded;
   }
